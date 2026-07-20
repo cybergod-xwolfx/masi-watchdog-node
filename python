@@ -1,0 +1,57 @@
+### watchdog.py
+```python
+#!/usr/bin/env python3
+# MASI Watchdog Node - Sovereign Comms Guardian
+# Lightweight edge protector for Wi-Fi/Bluetooth
+
+import time
+import scapy.all as scapy
+from cryptography.fernet import Fernet
+import requests
+import json
+
+class MASIWatchdog:
+    def __init__(self):
+        self.node_id = "dynasty_watchdog_01"
+        self.key = self.generate_dynamic_key()
+        self.masi_core_url = "https://your-secure-masi-core.example/alert"  # Protected tunnel
+        print("Watchdog initialized - Loyal guardian online.")
+
+    def generate_dynamic_key(self):
+        key = Fernet.generate_key()
+        print("Dynamic key generated.")
+        return key
+
+    def monitor_network(self):
+        def packet_handler(packet):
+            if packet.haslayer(scapy.IP):
+                if self.is_anomaly(packet):
+                    self.send_alert("Anomaly detected in traffic")
+        scapy.sniff(prn=packet_handler, timeout=10, store=0)
+
+    def is_anomaly(self, packet):
+        # Expand with rules or small ML model
+        return False  # Placeholder
+
+    def send_alert(self, message):
+        alert = {
+            "node": self.node_id,
+            "timestamp": time.time(),
+            "message": message,
+            "key_hash": str(self.key)[:16]
+        }
+        try:
+            print(f"🚨 ALERT to MASI Core: {message}")
+            # requests.post(self.masi_core_url, json=alert)
+        except:
+            print("Alert failed - local fallback active.")
+
+    def run(self):
+        print("Watchdog running - Protecting the signal...")
+        while True:
+            self.monitor_network()
+            time.sleep(5)
+
+if __name__ == "__main__":
+    watchdog = MASIWatchdog()
+    watchdog.run()
