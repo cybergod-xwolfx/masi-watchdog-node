@@ -1,0 +1,4 @@
+node_id: "dynasty_watchdog_01"
+masi_core_url: "https://your-secure-masi-core.example/alert"
+log_level: "info"
+alert_threshold: 0.8
